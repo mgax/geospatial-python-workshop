@@ -11,7 +11,8 @@ from pyproj import Proj
 stereo70 = Proj(init='epsg:31700')
 
 with open('localitati.csv', 'wb') as f:
-    out = csv.DictWriter(f, ['judet', 'nume', 'xy', 'vaci', 'oi'])
+    out = csv.DictWriter(f, ['judet', 'nume', 'xy', 'vaci', 'oi',
+                             'capre', 'porci', 'oameni'])
     out.writeheader()
 
     csv_lines = requests.get(LOCALITATI_URL, stream=True).iter_lines()
@@ -21,6 +22,9 @@ with open('localitati.csv', 'wb') as f:
             'judet': line['jud'],
             'nume': line['loc'],
             'xy': '%d,%d' % (float(x), float(y)),
-            'vaci': line['bovine'],
-            'oi': line['ovine'],
+            'vaci': line['bovine'] or '0',
+            'oi': line['ovine'] or '0',
+            'capre': line['caprine'] or '0',
+            'porci': line['porci'] or '0',
+            'oameni': line['pop2002'] or '0',
         })
